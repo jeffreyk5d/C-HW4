@@ -157,18 +157,23 @@ void addArrayBasedPoly(polynomialTerm a[], polynomialTerm b[], polynomialTerm d[
 				b_posi++;
 			}
 		}
-		while (a[a_posi].coef == 0 && a[a_posi].expo == 0&&d_posi!=MAX_TERMS) {							//若a陣列沒有值了則將b陣列剩餘的值存入d陣列
-			d[d_posi].coef = b[b_posi].coef;
-			d[d_posi].expo = b[b_posi].expo;
-			d_posi++;
-			b_posi++;
-		}
-		while (b[b_posi].coef == 0 && b[b_posi].expo == 0 && d_posi != MAX_TERMS) {							//若b陣列沒有值了則將a陣列剩餘的值存入d陣列
-			d[d_posi].coef = a[a_posi].coef;
+	        if(a[a_posi].coef == 0 && a[a_posi].expo == 0&&d_posi!=MAX_TERMS){
+                  while(b[b_posi].coef != 0 && b[b_posi].expo != 0 && d_posi != MAX_TERMS){
+                     d[d_posi].coef = b[b_posi].coef;
+	             d[d_posi].expo = b[b_posi].expo;
+		     d_posi++;
+	             b_posi++;
+                  }
+                }
+                if(b[b_posi].coef == 0 && b[b_posi].expo == 0 && d_posi != MAX_TERMS){
+                  while (a[a_posi].coef != 0 && a[a_posi].expo != 0 && d_posi != MAX_TERMS){
+                    	d[d_posi].coef = a[a_posi].coef;
 			d[d_posi].expo = a[a_posi].expo;
 			d_posi++;
 			a_posi++;
-		}
+                  }
+                 }
+               
 	}
 	
 

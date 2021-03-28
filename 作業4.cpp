@@ -109,11 +109,16 @@ void inputLinkTerms(linkedPolynomialTerm*& polyPtr, int coef, int expo)
 			return;
 		}
 		if (expo == cur_posi->expo) {
-			cur_posi = tmpPtr;
+			if(cur_posi==polyPtr){
+                           polyPtr=tmpPtr；
+                           return; 
+                        }
+                        cur_posi = tmpPtr;
 			return;
 		}
+
 		if (cur_posi == polyPtr) {									//若輸入為最大次方，則將tmpPtr下一項指向cur_posi，P.S.不能直接指向polyPtr，因為polyPtr一定要是Linklist的頭
-			tmpPtr->nextTermPtr = cur_posi;
+                        tmpPtr->nextTermPtr = cur_posi;
 			polyPtr = tmpPtr;										//再將tmpPtr的位置改成首項
 			return;													//直接回傳
 		}

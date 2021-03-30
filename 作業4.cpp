@@ -196,54 +196,73 @@ linkedPolynomialTerm* addLinkBasedPoly(linkedPolynomialTerm* aPtr, linkedPolynom
 	
 	linkedPolynomialTerm* a_posi;
 	linkedPolynomialTerm* b_posi;
-	linkedPolynomialTerm* d_posi;
-	linkedPolynomialTerm* tmpPtr;
-	tmpPtr = new linkedPolynomialTerm;
+	linkedPolynomialTerm* d_posi;	
 	a_posi = aPtr;
 	b_posi = bPtr;
 	d_posi = dPtr;
-	tmpPtr->nextTermPtr = nullptr;	
-	while (a_posi || b_posi) {
-		if ((a_posi->expo) > (b_posi->expo)) {			
-			tmpPtr= a_posi;			
-			a_posi = a_posi->nextTermPtr;
-			d_posi = tmpPtr;
-			d_posi=d_posi->nextTermPtr;
-		}else if (b_posi->expo > a_posi->expo) {
-			tmpPtr = b_posi;
-			d_posi = tmpPtr;
-			b_posi = b_posi->nextTermPtr;
-			d_posi = d_posi->nextTermPtr;
+	while (a_posi&& b_posi) {
+		if ((a_posi->expo) > (b_posi->expo)) {							
+			if (!dPtr) {
+				d_posi =dPtr= new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };
+			}
+			else {				
+				d_posi->nextTermPtr = new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };
+				d_posi = d_posi->nextTermPtr;
+			}			
+			a_posi = a_posi->nextTermPtr;			
+			
+		}else if (b_posi->expo > a_posi->expo) {			
+			if (!dPtr) {
+				d_posi = dPtr = new linkedPolynomialTerm{b_posi->coef,b_posi->expo };
+			}
+			else {
+				d_posi->nextTermPtr = new linkedPolynomialTerm{ b_posi->coef,b_posi->expo };
+				d_posi = d_posi->nextTermPtr;
+			}	
+			b_posi = b_posi->nextTermPtr;			
 		}else if ((a_posi->expo) == (b_posi->expo)) {
 			if ((a_posi->coef )+ (b_posi->coef) != 0) {
-				tmpPtr->coef = (a_posi->coef) + (b_posi->coef);
-				tmpPtr->expo = a_posi->expo;
-				d_posi = tmpPtr;
+				if (!dPtr) {
+					d_posi = dPtr = new linkedPolynomialTerm{ (a_posi->coef) + (b_posi->coef),a_posi->expo };
+				}
+				else {
+					d_posi->nextTermPtr = new linkedPolynomialTerm{ (a_posi->coef) + (b_posi->coef),a_posi->expo };
+					d_posi = d_posi->nextTermPtr;
+				}				
 				a_posi = a_posi->nextTermPtr;
-				b_posi = b_posi->nextTermPtr;
-				d_posi = d_posi->nextTermPtr;
+				b_posi = b_posi->nextTermPtr;				
 			}
 			else {
 				a_posi = a_posi->nextTermPtr;
 				b_posi = b_posi->nextTermPtr;
 			}
 			
-		}else if (!b_posi) {
-			while (a_posi) {
-				tmpPtr = a_posi;
-				a_posi = a_posi->nextTermPtr;
-				d_posi = tmpPtr;
-				d_posi = d_posi->nextTermPtr;
-			}
-		}else if (!a_posi) {
-			while (b_posi) {
-				tmpPtr = b_posi;
-				b_posi = b_posi->nextTermPtr;
-				d_posi = tmpPtr;
-				d_posi = d_posi->nextTermPtr;
-			}
 		}
 	}
+	
+	while (a_posi) {
+		if (!dPtr) {
+			d_posi = dPtr = new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };
+		}
+		else {
+			d_posi->nextTermPtr = new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };
+			d_posi = d_posi->nextTermPtr;
+		}
+		a_posi = a_posi->nextTermPtr;
+	}
+	
+	
+	while (b_posi) {
+		if (!dPtr) {
+			d_posi = dPtr = new linkedPolynomialTerm{ b_posi->coef,b_posi->expo };
+		}
+		else {
+			d_posi ->nextTermPtr= new linkedPolynomialTerm{ b_posi->coef,b_posi->expo };
+			d_posi->nextTermPtr = d_posi->nextTermPtr;
+		}
+		b_posi = b_posi->nextTermPtr;
+	}
+
 
 
 	return dPtr;

@@ -200,15 +200,15 @@ linkedPolynomialTerm* addLinkBasedPoly(linkedPolynomialTerm* aPtr, linkedPolynom
 	a_posi = aPtr;
 	b_posi = bPtr;
 	d_posi = dPtr;
-	while (a_posi&& b_posi) {
-		if ((a_posi->expo) > (b_posi->expo)) {							
-			if (!dPtr) {
-				d_posi =dPtr= new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };
-			}
-			else {				
-				d_posi->nextTermPtr = new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };
-				d_posi = d_posi->nextTermPtr;
-			}			
+	while (a_posi&& b_posi) {																//a_posi和b_posi都有值時執行
+		if ((a_posi->expo) > (b_posi->expo)) {												//當a_posi->coef比較大時
+			if (!dPtr) {																	//當是第一個輸入時
+				d_posi =dPtr= new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };		//dPtr原本是nullptr，讓他指像一個有塞a_posi值的結構，(用途像是c的malloc)
+			}																				//並讓d_posi指向dPtr，使其代替dPtr存取值，不然dPtr自己移動，資料會消失
+			else {																			//若dPtr已經有值
+				d_posi->nextTermPtr = new linkedPolynomialTerm{ a_posi->coef,a_posi->expo };//將a_posi的值存在d_posi->nextTermPtr裡 
+				d_posi = d_posi->nextTermPtr;												//移動d_posi (若在d_posi有值但d_posi->nextTermPtr沒有值的情況下先移動，
+			}																				//d_posi將指向nullptr，沒人記住上一個位置，Linklist會斷掉)
 			a_posi = a_posi->nextTermPtr;			
 			
 		}else if (b_posi->expo > a_posi->expo) {			

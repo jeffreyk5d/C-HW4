@@ -40,9 +40,9 @@ void inputTerms(polynomialTerm terms[], int coef, int expo)
 {
 	// add your code here
 	int input_posi = 0;
-	if (coef == 0) {												//係數為0 則不存入 直接返回
+	/*if (coef == 0) {												//係數為0 則不存入 直接返回
 		return;
-	}
+	}*/
 	if (terms[0].coef == 0 && terms[0].expo == 0) {					//若陣列沒有值 直接放第一個 放完返回
 		terms[0].coef = coef;
 		terms[0].expo = expo;
@@ -78,16 +78,19 @@ void inputLinkTerms(linkedPolynomialTerm*& polyPtr, int coef, int expo)
 	*&pre_posi = *&polyPtr;
 	*&cur_posi = *&polyPtr;
 	tmpPtr->nextTermPtr = nullptr;								//polyPtr->nextTermPtr原本沒指向任何東西(也沒指向nullptr) 所以無從判斷， 所一要在輸入第一個Link後 讓polyPtr->nextTermPtr指項nullptr;
-	if (tmpPtr->coef == 0) {
+	/*if (tmpPtr->coef == 0) {
 		return;
-	}
+	}*/
 	if (!polyPtr) {													//若polyPtr裡沒有值 則將已存好input值的tmpPtr存入polyPtr的第一個Link
 		polyPtr = tmpPtr;
+		if (polyPtr->coef == 0) {									//首相係數為零，移動首項，使其被刪除
+			polyPtr = polyPtr->nextTermPtr;
+		}
 		return;
 	}
 	else {
-		while (cur_posi) {											//若cur_posi有值則繼續，若沒break;最後會停在沒有值的地方			
-			if (tmpPtr->expo >= cur_posi->expo) {							//若expo大於cur_posi的expo 就break讓cur_posi留在它之後要放入的位置
+		while (cur_posi) {											//若cur_posi有值則繼續，若沒則break;最後會停在沒有值的地方			
+			if (tmpPtr->expo >= cur_posi->expo) {					//若expo大於cur_posi的expo 就break讓cur_posi留在它之後要放入的位置
 				break;
 			}
 			cur_posi = cur_posi->nextTermPtr;
@@ -114,6 +117,10 @@ void inputLinkTerms(linkedPolynomialTerm*& polyPtr, int coef, int expo)
 				return;
 			}
 			else {
+				if (tmpPtr->coef==0) {
+					pre_posi->nextTermPtr = cur_posi->nextTermPtr; //跳過cur_posi，直接return 讓下面連接tmpPtr的程式碼不執行
+					return;
+				}
 				pre_posi->nextTermPtr = tmpPtr;	
 				tmpPtr->nextTermPtr = cur_posi->nextTermPtr;
 			}
@@ -124,12 +131,18 @@ void inputLinkTerms(linkedPolynomialTerm*& polyPtr, int coef, int expo)
 		if (cur_posi == polyPtr) {									//若輸入為最大次方，則將tmpPtr下一項指向cur_posi，P.S.不能直接指向polyPtr，因為polyPtr一定要是Linklist的頭
 			tmpPtr->nextTermPtr = cur_posi;
 			polyPtr = tmpPtr;										//再將tmpPtr的位置改成首項
+			if (polyPtr->coef == 0) {									//首相係數為零，移動首項，使其被刪除
+				polyPtr = polyPtr->nextTermPtr;
+			}
 			return;													//直接回傳
+
 		}
+		
 
 		pre_posi->nextTermPtr = tmpPtr;
 		tmpPtr->nextTermPtr = cur_posi;
 	}
+
 	return;
 }
 
